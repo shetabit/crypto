@@ -24,8 +24,6 @@ class CryptoServiceProvider extends ServiceProvider
             ],
             'migrations'
         );
-
-        $this->registerMacroHelpers();
     }
 
     /**
@@ -36,13 +34,6 @@ class CryptoServiceProvider extends ServiceProvider
     public function register()
     {
         /**
-         * Load default configurations.
-         */
-        $this->mergeConfigFrom(
-            __DIR__.'/../../config/crypto.php', 'crypto'
-        );
-
-        /**
          * Bind to service container.
          */
         $this->app->singleton('shetabit-crypto', function () {
@@ -50,13 +41,5 @@ class CryptoServiceProvider extends ServiceProvider
 
             return new Crypto($request, config('crypto'));
         });
-    }
-
-    /**
-     * Register micros
-     */
-    protected function registerMacroHelpers()
-    {
-
     }
 }

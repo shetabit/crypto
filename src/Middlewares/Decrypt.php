@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 
 class Decrypt
 {
+    protected $algorithem;
+
     /**
      * Handle an incoming request.
      *
@@ -16,8 +18,10 @@ class Decrypt
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $algorithem = 'RSA')
     {
+        $this->algorithem = $algorithem;
+
         return $next($request);
     }
 }

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 
 class Encrypt
 {
+    protected $algorithem;
+
     /**
      * Handle an incoming request.
      *
@@ -16,8 +18,18 @@ class Encrypt
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $algorithem = 'RSA')
     {
+        $this->algorithem = $algorithem;
+
         return $next($request);
     }
+
+    /**
+     * encrypt data
+     */
+    public function terminate($request, $response)
+    {
+        // Store the session data...
+    }    
 }
