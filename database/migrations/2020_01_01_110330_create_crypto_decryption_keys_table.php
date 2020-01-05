@@ -17,7 +17,7 @@ class CreateCryptoPublicKeysTable extends Migration
             $table->bigIncrements('id');
             $table->text('key');
             $table->string('algorithm')->nullabe();
-            $table->nullableMorphs('user');
+            $table->nullableMorphs('entity');
             $table->timestamp('expired_at')->nullable();
             $table->unsignedBigInteger('crypto_encryption_key_id')->nullable();
             $table->timestamps();

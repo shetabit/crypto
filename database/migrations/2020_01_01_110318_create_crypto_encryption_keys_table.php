@@ -17,7 +17,7 @@ class CreateCryptoPrivateKeysTable extends Migration
             $table->bigIncrements('id');
             $table->text('key');
             $table->string('algorithm');
-            $table->nullableMorphs('user');
+            $table->nullableMorphs('entity');
             $table->timestamp('expired_at')->nullable();
             $table->timestamps();
         });

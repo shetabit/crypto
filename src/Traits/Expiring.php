@@ -1,6 +1,6 @@
 <?php
 
-namespace Illuminate\Database\Eloquent;
+namespace Shetabit\Crypto\Traits;
 
 /**
  * @method static static|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder withTrashed()
@@ -27,6 +27,32 @@ trait Expiring
     public function initializeExpiring()
     {
         $this->dates[] = $this->getExpiredAtColumn();
+    }
+
+    /**
+     * Mark as expired
+     *
+     * @return bool
+     */
+    public function markAsExpired()
+    {
+        if (! $this->exists) {
+            return;
+        }
+
+        $this->performExpiringOnModel();
+
+        return true;
+    }
+
+    /**
+     * Perform the actual expiring query on this model instance.
+     *
+     * @return mixed
+     */
+    protected function performExpiringOnModel()
+    {
+        return $this->runExpiring();
     }
 
     /**
@@ -58,13 +84,15 @@ trait Expiring
      *
      * @return bool
      */
-    public function expired()
+    public function hasExpired()
     {
-        return ! is_null($this->{$this->getExpiredAtColumn()});
+        $expiredAt = $this->{$this->getExpiredAtColumn()};
+
+        return ! is_null($expiredAt) && now()->gt($this->expired_at);
     }
 
     /**
-     * Get the name of the "deleted at" column.
+     * Get the name of the "expired at" column.
      *
      * @return string
      */
@@ -74,34 +102,12 @@ trait Expiring
     }
 
     /**
-     * Get the fully qualified "deleted at" column.
+     * Get the fully qualified "expired at" column.
      *
      * @return string
      */
     public function getQualifiedExpiredAtColumn()
     {
         return $this->qualifyColumn($this->getExpiredAtColumn());
-    }
-
-    /**
-     * Determine if token has expired
-     *
-     * @return bool
-     */
-    public function hasExpired()
-    {
-        return $this->expired_at === null ? false : now()->gt($this->expired_at);
-    }
-
-    /**
-     * Mark token as expired
-     *
-     * @return mixed
-     */
-    public function markAsExpired()
-    {
-        $this->forceFill(['expired_at' => now()])->save();
-
-        return $this;
     }
 }

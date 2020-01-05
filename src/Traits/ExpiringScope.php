@@ -1,6 +1,10 @@
 <?php
 
-namespace Illuminate\Database\Eloquent;
+namespace Shetabit\Crypto\Traits;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Scope;
 
 class ExpiringScope implements Scope
 {
@@ -21,7 +25,11 @@ class ExpiringScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        $builder->whereNull($model->getQualifiedExpiredAtColumn());
+        $time = $this->freshTimestamp();
+
+        $builder
+            ->whereNull($model->getQualifiedExpiredAtColumn())
+            ->orWhere($model->getQualifiedExpiredAtColumn(), '>', $time);
     }
 
     /**
@@ -36,14 +44,6 @@ class ExpiringScope implements Scope
         foreach ($this->extensions as $extension) {
             $this->{"add{$extension}"}($builder);
         }
-
-        $builder->onDelete(function (Builder $builder) {
-            $column = $this->getExpiredAtColumn($builder);
-
-            return $builder->update([
-                $column => $builder->getModel()->freshTimestampString(),
-            ]);
-        });
     }
 
     /**
@@ -91,10 +91,12 @@ class ExpiringScope implements Scope
     {
         $builder->macro('withoutExpired', function (Builder $builder) {
             $model = $builder->getModel();
+            $time = $this->freshTimestamp();
 
-            $builder->withoutGlobalScope($this)->whereNull(
-                $model->getQualifiedExpiredAtColumn()
-            );
+            $builder
+                ->withoutGlobalScope($this)
+                ->whereNull($model->getQualifiedExpiredAtColumn())
+                ->orWhere($model->getQualifiedExpiredAtColumn(), '<', $time);
 
             return $builder;
         });
@@ -111,10 +113,12 @@ class ExpiringScope implements Scope
     {
         $builder->macro('onlyExpired', function (Builder $builder) {
             $model = $builder->getModel();
+            $time = $this->freshTimestamp();
 
-            $builder->withoutGlobalScope($this)->whereNotNull(
-                $model->getQualifiedExpiredAtColumn()
-            );
+            $builder
+                ->withoutGlobalScope($this)
+                ->whereNotNull($model->getQualifiedExpiredAtColumn())
+                ->orWhere($model->getQualifiedExpiredAtColumn(), '>', $time);
 
             return $builder;
         });

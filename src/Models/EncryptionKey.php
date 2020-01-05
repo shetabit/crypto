@@ -3,9 +3,12 @@
 namespace Shetabit\Crypto\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Shetabit\Crypto\Traits\Expiring;
 
 class EncryptionKey extends Model
 {
+    use Expiring;
+
     /**
      * The table associated with the model.
      *
@@ -42,7 +45,12 @@ class EncryptionKey extends Model
         return $this->hasMany(DecryptionKey::class, 'crypto_encryption_key_id');
     }
 
-    public function user()
+    /**
+     * Retrieve related entity
+     *
+     * @return MorphTo
+     */
+    public function entity()
     {
         return $this->morphTo();
     }
