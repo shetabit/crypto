@@ -1,7 +1,12 @@
 <p align="center"><img src="resources/images/crypto.png?raw=true"></p>
 
-# Laravel Crypto
+# Crypto
 
-this package can be used to auto **Encrypt** and **Decrypt** communications between server and client.
+This package can be used to **Encrypt**, **Decrypt** and **sign** data using **Asymmetric** algorithms in php.
 
-both **asymmetric** and **symmetric** algoritms can be used.
+the below algoritms can be used:
+
+- RSA
+- DSA
+- DH
+- EC

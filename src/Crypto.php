@@ -15,6 +15,7 @@ class Crypto
     /**
      * Defualt configs
      */
+    const DEFAULT_KEY_TYPE = OPENSSL_KEYTYPE_EC;
     const DEFUALT_KEY_BITS = 2048;
     const DEFUALT_CURVE_NAME = 'sect571r1';
 
@@ -28,7 +29,7 @@ class Crypto
      */
     public function createPrivateKey($keyType = null, array $options = []) : string
     {
-        $keyType = $keyType ?? static::KEY_TYPE_RSA;
+        $keyType = $keyType ?? static::DEFAULT_KEY_TYPE;
 
         $defaults = array(
             'private_key_bits' => self::DEFUALT_KEY_BITS,
