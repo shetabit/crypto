@@ -15,9 +15,9 @@ class Crypto
     /**
      * Defualt configs
      */
-    const DEFAULT_KEY_TYPE = OPENSSL_KEYTYPE_EC;
+    const DEFAULT_KEY_TYPE = OPENSSL_KEYTYPE_RSA;
     const DEFUALT_KEY_BITS = 2048;
-    const DEFUALT_CURVE_NAME = 'sect571r1';
+    const DEFUALT_CURVE_NAME = 'prime256v1';
 
     /**
      * Create a new private key.
@@ -82,7 +82,7 @@ class Crypto
      */
     public function encrypt(string $publicKey, string $data) : string
     {
-        openssl_public_encrypt($data , $crypted , $publicKey , OPENSSL_PKCS1_PADDING);
+        openssl_public_encrypt($data, $crypted, $publicKey, OPENSSL_PKCS1_PADDING);
 
         return $crypted;
     }
@@ -112,9 +112,7 @@ class Crypto
      */
     public function sign($privateKey, $data) : string
     {
-        $keyId = openssl_pkey_get_private($privateKey);
-        openssl_sign($data, $signature, $keyId, OPENSSL_ALGO_SHA1);
-        openssl_free_key($keyId);
+        openssl_sign($data, $signature, $privateKey, OPENSSL_ALGO_SHA1);
 
         return $signature;
     }
